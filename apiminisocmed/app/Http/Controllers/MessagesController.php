@@ -37,15 +37,64 @@ class MessagesController extends Controller
         ], 201);
     }
 
-    public function destroy(int $id)
-    {
-        Message::destroy($id);
+    public function getMessagesByUserId(int $user_id) {
+        $messages = Message::where('receiver_id', $user_id)->get();
+
+        if(!$messages) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Messages from this user not found',
+            ], 404);
+        }
+
         return response()->json([
             'success' => true,
-            'message' => 'Comment deleted successfully',
+            'message' => 'Messages from this user retrieved successfully',
+            'data' => $messages,
+        ]);
+    }
+
+    public function destroy(int $id)
+    {
+        $message = Message::find($id);
+        if(!$message) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Message not found',
+            ], 404);
+        }
+        $message->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Message deleted successfully',
         ], 200);
     }
 
-    public function index()
+    public function show(int $id) {
+        $message = Message::find($id);
+
+        if(!$message) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Message not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Message retrieved successfully',
+            'data' => $message,
+        ]);
+    }
+
+    public function index() {
+        $messages = Message::get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Message retrieved successfully',
+            'data' => $messages,
+        ]);
+    }
 
 }
