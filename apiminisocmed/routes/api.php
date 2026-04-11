@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function () {
     // Handle Auth
     Route::Post('register', [JWTAuthController::class, 'register']);
     Route::Post('login', [JWTAuthController::class, 'login']);
+    Route::middleware(JWTMiddleware::class)->get('me', [JWTAuthController::class, 'getUser']);
 
     // Handle route posts
     Route::middleware(JWTMiddleware::class)->prefix('posts')->group(function () {
