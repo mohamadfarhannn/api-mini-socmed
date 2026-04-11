@@ -1,0 +1,28 @@
+name: Deploy Laravel ke VPS
+
+# Robot ini cuma akan jalan kalau ada perubahan (push) di branch main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploying to VPS...
+        uses: appleboy/ssh-action@master # Ini library standar buat eksekusi SSH
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          # Ini adalah perintah yang akan diketik otomatis sama robot di VPS
+          script: |
+            cd /var/www/api-mini-socmed/apiminisocmed
+            git pull origin main
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+            php artisan config:clear
+            php artisan route:clear
+            php artisan cache:clear
+            php artisan view:clear
