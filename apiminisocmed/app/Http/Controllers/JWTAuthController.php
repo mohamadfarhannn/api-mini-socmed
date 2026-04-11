@@ -50,4 +50,12 @@ class JWTAuthController extends Controller
 
         return response()->json(compact('token'));
     }
+
+    public function getUser()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => JWTAuth::user()
+        ], 200);
+    }
 }
