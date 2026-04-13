@@ -11,7 +11,7 @@ class PostsController extends Controller
 {
     // === GET ALL DATA ===
     public function index() {
-        $posts = Post::with(['user', 'comments', 'likes'])->get();
+        $posts = Post::with(['user', 'comments', 'likes'])->latest()->get();
 
         return response()->json([
             'success' => true,
